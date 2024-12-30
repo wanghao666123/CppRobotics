@@ -238,6 +238,7 @@ void dijkstra_star_planning(float sx, float sy,
 
 
 int main(){
+  //!起点的坐标
   float sx = 10.0;
   float sy = 10.0;
   float gx = 50.0;
