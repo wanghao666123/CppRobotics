@@ -241,36 +241,44 @@ int main(){
   //!起点的坐标
   float sx = 10.0;
   float sy = 10.0;
+  //!终点的坐标
   float gx = 50.0;
   float gy = 50.0;
-
+  //!网格的大小
   float grid_size = 1.0;
+  //!机器人的大小
   float robot_size = 1.0;
-
+  //!用来存储障碍物的 x 和 y 坐标
   vector<float> ox;
   vector<float> oy;
 
   // add edges
+  //!添加了一个从 (0, 60) 到 (59, 60) 的水平障碍物
   for(float i=0; i<60; i++){
     ox.push_back(i);
     oy.push_back(60.0);
   }
+  //!添加了一个从 (60, 0) 到 (60, 59) 的垂直障碍物
   for(float i=0; i<60; i++){
     ox.push_back(60.0);
     oy.push_back(i);
   }
+  //!再次添加了一个水平障碍物，从 (0, 60) 到 (60, 60)
   for(float i=0; i<61; i++){
     ox.push_back(i);
     oy.push_back(60.0);
   }
+  //!添加了一个从 (0, 0) 到 (0, 60) 的竖直障碍物
   for(float i=0; i<61; i++){
     ox.push_back(0.0);
     oy.push_back(i);
   }
+  //!添加了一个垂直障碍物，位置从 (20, 0) 到 (20, 39)
   for(float i=0; i<40; i++){
     ox.push_back(20.0);
     oy.push_back(i);
   }
+  //!添加了一个从 (40, 60) 到 (40, 21) 的垂直障碍物
   for(float i=0; i<40; i++){
     ox.push_back(40.0);
     oy.push_back(60.0 - i);
