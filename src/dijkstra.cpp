@@ -111,6 +111,7 @@ void dijkstra_star_planning(float sx, float sy,
                      vector<float> ox_, vector<float> oy_,
                      float reso, float rr){
 
+  //!设置起点和终点，cost = 0
   Node* nstart = new Node((int)std::round(sx/reso), (int)std::round(sy/reso), 0.0);
   Node* ngoal = new Node((int)std::round(gx/reso), (int)std::round(gy/reso), 0.0);
 
@@ -118,19 +119,20 @@ void dijkstra_star_planning(float sx, float sy,
   vector<int> ox;
   vector<int> oy;
 
+  //!初始化障碍物的最大最小值
   int min_ox = std::numeric_limits<int>::max();
   int max_ox = std::numeric_limits<int>::min();
   int min_oy = std::numeric_limits<int>::max();
   int max_oy = std::numeric_limits<int>::min();
 
-
+  //!找到障碍物x方向的最大值和最小值
   for(float iox:ox_){
       int map_x = (int)std::round(iox*1.0/reso);
       ox.push_back(map_x);
       min_ox = std::min(map_x, min_ox);
       max_ox = std::max(map_x, max_ox);
   }
-
+  //!找到障碍物y方向的最大值和最小值
   for(float ioy:oy_){
       int map_y = (int)std::round(ioy*1.0/reso);
       oy.push_back(map_y);
@@ -142,23 +144,25 @@ void dijkstra_star_planning(float sx, float sy,
   int ywidth = max_oy-min_oy;
 
   //visualization
+  //!使用 OpenCV 库创建了一个名为 astar 的窗口，并设置该窗口为可调整大小的窗口
   cv::namedWindow("astar", cv::WINDOW_NORMAL);
   int count = 0;
   int img_reso = 5;
+  //!创建了一个宽度为 img_reso * xwidth，高度为 img_reso * ywidth 的白色背景图像，图像的每个像素包含 3 个通道（蓝色、绿色、红色），每个通道的值为 255（即白色）。
   cv::Mat bg(img_reso*xwidth,
              img_reso*ywidth,
              CV_8UC3,
              cv::Scalar(255,255,255));
-
-    cv::rectangle(bg,
+  //!在背景图像上绘制了起点和终点的红色和蓝色矩形
+  cv::rectangle(bg,
                   cv::Point(nstart->x*img_reso+1, nstart->y*img_reso+1),
                   cv::Point((nstart->x+1)*img_reso, (nstart->y+1)*img_reso),
                   cv::Scalar(255, 0, 0), -1);
-    cv::rectangle(bg,
+  cv::rectangle(bg,
                   cv::Point(ngoal->x*img_reso+1, ngoal->y*img_reso+1),
                   cv::Point((ngoal->x+1)*img_reso, (ngoal->y+1)*img_reso),
                   cv::Scalar(0, 0, 255), -1);
-
+  //!创建了 xwidth 行，每一行都有 ywidth 列，初始值都为 0
   std::vector<std::vector<int> > visit_map(xwidth, vector<int>(ywidth, 0));
 
 
