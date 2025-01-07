@@ -43,7 +43,7 @@ std::vector<std::vector<float> > calc_final_path(Node * goal, float reso, cv::Ma
   return {rx, ry};
 }
 
-
+//!通过障碍物坐标生成一个离散的障碍物栅格地图，同时将障碍物绘制到图像 img 上
 std::vector<std::vector<int> > calc_obstacle_map(
     std::vector<int> ox, std::vector<int> oy,
     const int min_ox, const int max_ox,
@@ -94,16 +94,16 @@ bool verify_node(Node* node,
 float calc_heristic(Node n1, Node n2, float w=1.0){
   return w * std::sqrt(std::pow(n1.x-n2.x, 2)+std::pow(n1.y-n2.y, 2));
 }
-
+//! 定义机器人的运动模型
 std::vector<Node> get_motion_model(){
-  return {Node(1,   0,  1),
-          Node(0,   1,  1),
-          Node(-1,   0,  1),
-          Node(0,   -1,  1),
-          Node(-1,   -1,  std::sqrt(2)),
-          Node(-1,   1,  std::sqrt(2)),
-          Node(1,   -1,  std::sqrt(2)),
-          Node(1,    1,  std::sqrt(2))};
+  return {Node(1,   0,  1),//!向右移动一格
+          Node(0,   1,  1),//!向上移动一格
+          Node(-1,   0,  1),//!向左移动一格
+          Node(0,   -1,  1),//!向下移动一格
+          Node(-1,   -1,  std::sqrt(2)),//!左下角移动一格（对角线）
+          Node(-1,   1,  std::sqrt(2)),//!左上角移动一格（对角线）
+          Node(1,   -1,  std::sqrt(2)),//!右下角移动一格（对角线）
+          Node(1,    1,  std::sqrt(2))};//!右上角移动一格（对角线）
 }
 
 void dijkstra_star_planning(float sx, float sy,
@@ -165,7 +165,7 @@ void dijkstra_star_planning(float sx, float sy,
   //!创建了 xwidth 行，每一行都有 ywidth 列，初始值都为 0
   std::vector<std::vector<int> > visit_map(xwidth, vector<int>(ywidth, 0));
 
-
+  //!通过障碍物坐标生成一个离散的障碍物栅格地图，同时将障碍物绘制到图像 img 上
   std::vector<std::vector<int> > obmap = calc_obstacle_map(
                                                   ox, oy,
                                                   min_ox, max_ox,
@@ -174,6 +174,8 @@ void dijkstra_star_planning(float sx, float sy,
                                                   bg, img_reso);
 
   // NOTE: d_ary_heap should be a better choice here
+  //!优先队列默认认为返回 true 的元素优先级低，需要被放在堆的后面
+  //!cost低的优先级高，在堆的前面
   auto cmp = [](const Node* left, const Node* right){return left->cost > right->cost;};
   std::priority_queue<Node*, std::vector<Node*>, decltype(cmp)> pq(cmp);
 
